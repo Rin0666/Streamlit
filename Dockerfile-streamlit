@@ -1,0 +1,48 @@
+# escape=`
+
+FROM 10.36.27.24:5000/dash-windows:v0.0.1
+
+ARG APP_COMMIT=unknown
+LABEL org.opencontainers.image.revision="${APP_COMMIT}"
+
+USER ContainerAdministrator
+
+COPY deployment/odbc/ C:/installers/odbc/
+COPY deployment/install_odbc_container.ps1 C:/installers/install_odbc_container.ps1
+RUN ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "C:/installers/install_odbc_container.ps1"]
+
+ENV PYTHONDONTWRITEBYTECODE=1 `
+    PYTHONUNBUFFERED=1 `
+    PIP_DISABLE_PIP_VERSION_CHECK=1 `
+    STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+
+WORKDIR C:/app
+
+COPY requirements.txt ./
+COPY wheelhouse_py311/ C:/wheelhouse_py311/
+
+RUN ["python", "-m", "pip", "install", "--no-index", "--find-links=C:/wheelhouse_py311", "--no-cache-dir", "--only-binary=:all:", "-r", "requirements.txt"]
+
+RUN ["python", "-m", "pip", "check"]
+
+RUN ["python", "-c", "from pathlib import Path; Path('data_sources').mkdir(exist_ok=True)"]
+
+COPY app.py ./
+COPY dashboard/ ./dashboard/
+COPY queries/ ./queries/
+COPY okada/ ./okada/
+COPY .streamlit/config.toml ./.streamlit/config.toml
+COPY data_sources/churn_model_monitoring_data.xlsx C:/app/data_sources/churn_model_monitoring_data.xlsx
+
+USER ContainerUser
+
+COPY deployment/verify_odbc.py C:/app/deployment/verify_odbc.py
+RUN ["python", "C:/app/deployment/verify_odbc.py"]
+
+RUN ["python", "-c", "import streamlit, pandas, openpyxl, altair, pyarrow, pyodbc, okada; print('Python 3.11 app dependencies imported successfully')"]
+
+EXPOSE 8501
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=4).read()"]
+
+CMD ["python", "-m", "streamlit", "run", "app.py", "--server.address=0.0.0.0", "--server.port=8501", "--server.headless=true", "--server.fileWatcherType=none"]

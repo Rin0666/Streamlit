@@ -1,0 +1,1 @@
+select * from dws.dws_mkt_memberprofile

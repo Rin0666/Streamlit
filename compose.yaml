@@ -1,0 +1,38 @@
+services:
+  dashboard:
+    image: "${DASHBOARD_IMAGE:-srm-streamlit:windows-ltsc2022}"
+    build:
+      context: .
+      dockerfile: Dockerfile-streamlit
+      isolation: "${CONTAINER_ISOLATION:-process}"
+      args:
+        APP_COMMIT: "${APP_COMMIT:-unknown}"
+    isolation: "${CONTAINER_ISOLATION:-process}"
+    ports:
+      - "${APP_PORT:-8501}:8501"
+    environment:
+      DASHBOARD_ACCESS_FILE: 'C:\app\access-config\page_access.yaml'
+      # Public URL exposed by the company reverse proxy. Streamlit continues
+      # listening on 8501 inside the container and Compose publishes APP_PORT.
+      STREAMLIT_BROWSER_SERVER_ADDRESS: "${APP_HOSTNAME:-smart.okadamanila.com}"
+      STREAMLIT_BROWSER_SERVER_PORT: "${APP_EXTERNAL_PORT:-443}"
+      # The host-side deployment service is separate from this container and
+      # never exposes the Docker daemon to the application.
+      DEPLOYMENT_SERVICE_URL: "${DEPLOYMENT_SERVICE_URL:-}"
+      DEPLOYMENT_SERVICE_TOKEN: "${DEPLOYMENT_SERVICE_TOKEN:-}"
+    volumes:
+      - type: bind
+        source: ./data_sources
+        target: 'C:\app\data_sources'
+        read_only: true
+        bind:
+          create_host_path: false
+      # Windows containers require directory mounts. The editor only writes
+      # page_access.yaml and its backup; application code still comes from the image.
+      - type: bind
+        source: ./dashboard
+        target: 'C:\app\access-config'
+        read_only: false
+        bind:
+          create_host_path: false
+    restart: unless-stopped
