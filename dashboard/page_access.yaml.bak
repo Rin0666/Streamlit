@@ -1,0 +1,27 @@
+# Page URL -> LDAP email group CN -> maximum allowed tigerLevel (inclusive).
+# A member of any listed group qualifies when tigerLevel <= that group's maximum.
+# Missing/invalid tigerLevel, unlisted pages, and empty mappings deny access.
+# Home (/) is available to all signed-in users.
+/monitoring:
+  SM - Gaming Analytics: 1
+  Operations: 4
+  LoyaltyMarketing: 6
+/Loadings:
+  SM - Gaming Analytics: 1
+  LoyaltyMarketing: 6
+/model-performance: 
+  SM - Gaming Analytics: 6
+/campaign: 
+  SM - Gaming Analytics: 6
+/drift-monitoring: 
+  SM - Gaming Analytics: 6
+/member-profile: 
+  SM - Gaming Analytics: 6
+/connections: 
+  SM - Gaming Analytics: 6
+/settings: 
+  SM - Gaming Analytics: 4
+/models-availability:
+  SM - Gaming Analytics: 6
+/page-access:
+  SM - Gaming Analytics: 1

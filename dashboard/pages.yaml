@@ -1,0 +1,94 @@
+# Order here controls Home categories and sidebar groups.
+# Access is configured separately by URL in page_access.yaml.
+categories:
+  - title: Monitoring
+    description: Review model performance, campaigns, drift, and loadings.
+    icon: ':material/monitoring:'
+    pages:
+      - title: Executive Summary
+        path: /monitoring
+        renderer: executive_summary
+        description: Review model health and the latest performance indicators.
+        icon: ':material/dashboard:'
+      - title: Model Performance
+        path: /model-performance
+        renderer: model_performance
+        description: Explore prediction quality, lift, and decile results.
+        icon: ':material/bar_chart:'
+      - title: Campaigns
+        path: /campaign
+        renderer: campaign
+        description: Review campaign outcomes and response performance.
+        icon: ':material/campaign:'
+      - title: Drift Monitoring
+        path: /drift-monitoring
+        renderer: drift
+        description: Track changes in model scores and input features.
+        icon: ':material/monitoring:'
+      - title: Loadings Monitoring
+        path: /Loadings
+        renderer: loadings
+        description: Monitor Engage loading adjustments, amounts, and patron records.
+        icon: ':material/payments:'
+
+  - title: Reports
+    description: View redemption and GGR reports.
+    icon: ':material/assessment:'
+    pages:
+      - title: Redemption
+        path: /redemption
+        renderer: redemption
+        icon: ':material/redeem:'
+      - title: GGR
+        path: /ggr
+        renderer: ggr
+        icon: ':material/payments:'
+
+  - title: Members
+    description: Look up member profiles and patron information.
+    icon: ':material/groups:'
+    pages:
+      - title: Member Profile
+        path: /member-profile
+        renderer: member_profile
+        description: Search Datamart by UniversalPlayerID, FirstName, or LastName.
+        icon: ':material/person:'
+
+  - title: Machine
+    description: View machine ratings.
+    icon: ':material/casino:'
+    pages:
+      - title: FEX Ratings
+        path: /fex-ratings
+        renderer: fex_ratings
+        icon: ':material/star:'
+
+  - title: Settings
+    description: View configuration, model availability, and connection checks.
+    icon: ':material/settings:'
+    pages:
+      - title: Configuration
+        path: /settings
+        renderer: configuration
+        description: View dashboard model and workbook configuration.
+        icon: ':material/tune:'
+      - title: Models Availability
+        path: /models-availability
+        renderer: models_availability
+        description: See which registered models are available in the dashboard.
+        icon: ':material/checklist:'
+      - title: Connections Checker
+        path: /connections
+        renderer: connections
+        description: Run on-demand directory and database connection checks.
+        icon: ':material/lan:'
+      - title: Page Access
+        path: /page-access
+        renderer: page_access
+        description: Edit and save page access groups and maximum levels.
+        icon: ':material/admin_panel_settings:'
+      - title: Application Deployment
+        path: /deployment
+        renderer: deployment
+        description: Check for and deploy approved application updates.
+        icon: ':material/system_update_alt:'
